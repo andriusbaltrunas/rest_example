@@ -1,7 +1,11 @@
 package rest;
 
+import rest.service.StudentsService;
+import rest.utils.DbUtils;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,11 +54,32 @@ public class MyFirstRest {
     @Path("/students")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Student> getStudents(){
-        List<Student> students = new ArrayList<>();
-        students.add(new Student(12, "Andrius", "Baltrunas", "+3703324324", "andrius@kcs.com"));
+        StudentsService studentsService = new StudentsService();
+        List<Student> students = studentsService.getStudents();
+       /* students.add(new Student(12, "Andrius", "Baltrunas", "+3703324324", "andrius@kcs.com"));
         students.add(new Student(1, "JOnas", "Bla", "+4390583490", "jonas@kcs.com"));
-        students.add(new Student(2, "Kazys", "Blob", "+4432356236236", "kazys@kcs.com"));
-
+        students.add(new Student(2, "Kazys", "Blob", "+4432356236236", "kazys@kcs.com"));*/
         return students;
+    }
+
+    @GET
+    @Path("/{id}/student")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Student getStudent(@PathParam("id") int id){
+        StudentsService studentsService = new StudentsService();
+        Student st = studentsService.getStudent(id);
+        return st;
+    }
+
+    @GET
+    @Path("/connect")
+    public boolean isConnected(){
+        DbUtils db = new DbUtils();
+        Connection connection = db.createConnection();
+        boolean isConnect = false;
+        if(connection != null){
+            isConnect = true;
+        }
+        return isConnect;
     }
 }

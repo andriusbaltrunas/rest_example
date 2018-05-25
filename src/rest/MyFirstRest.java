@@ -1,10 +1,12 @@
 package rest;
 
+import rest.exception.UserDontCreateException;
 import rest.service.StudentsService;
 import rest.utils.DbUtils;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,5 +83,19 @@ public class MyFirstRest {
             isConnect = true;
         }
         return isConnect;
+    }
+
+    @POST
+    @Path("/save")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response save(Student student){
+        StudentsService st = new StudentsService();
+        Response.Status status= Response.Status.OK;
+        try {
+            st.insertStudent(student);
+        } catch (UserDontCreateException e) {
+            status = Response.Status.NOT_MODIFIED;
+        }
+        return Response.status(status).build();
     }
 }

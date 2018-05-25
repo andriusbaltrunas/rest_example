@@ -9,6 +9,7 @@ public class Student {
     private String surname;
     private String phone;
     private String email;
+    private Test test;
 
     public Student(){}
 
@@ -18,6 +19,7 @@ public class Student {
         this.surname = surname;
         this.phone = phone;
         this.email = email;
+        test = new Test();
     }
 
     public int getId() {
@@ -58,5 +60,9 @@ public class Student {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Test getTest() {
+        return test;
     }
 }

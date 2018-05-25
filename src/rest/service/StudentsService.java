@@ -1,12 +1,10 @@
 package rest.service;
 
 import rest.Student;
+import rest.exception.UserDontCreateException;
 import rest.utils.DbUtils;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,9 +36,21 @@ public class StudentsService {
         return students;
     }
 
-
-    public void insertStudent(Student student) {
-        //TODO INSERT STUDENT
+    public void insertStudent(Student student) throws UserDontCreateException {
+        if(connection != null){
+            try {
+                PreparedStatement p = connection.prepareStatement("insert into students(name, surname, phone, email)" +
+                        "values(?, ?, ?, ?)");
+                p.setString(1, student.getName());
+                p.setString(2, student.getSurname());
+                p.setString(3, student.getPhone());
+                p.setString(4, student.getEmail());
+                p.execute();
+            } catch (SQLException e) {
+                System.out.println(e);
+                throw new UserDontCreateException("can`t insert new student", e);
+            }
+        }
     }
 
     public Student getStudent(int id) {
